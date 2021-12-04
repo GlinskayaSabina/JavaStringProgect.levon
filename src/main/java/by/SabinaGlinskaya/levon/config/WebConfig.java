@@ -1,4 +1,4 @@
-package by.SabinaGlinskaya.levon.config;
+package com.pet.dostavochka.Configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
