@@ -1,0 +1,32 @@
+header {
+    padding: 15px;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* header links */
+header > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 130px;
+}
+
+footer {
+    padding: 15px;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: end;
+}
+
+.container {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
