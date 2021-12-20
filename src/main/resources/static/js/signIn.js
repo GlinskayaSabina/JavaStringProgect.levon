@@ -5,7 +5,7 @@ function signIn() {
 
     error.innerHTML = "";
 
-    fetch("http://localhost:8080/api/v1/account/signin", {
+    fetch("http://localhost:8080/api/v1/auth/signin", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
