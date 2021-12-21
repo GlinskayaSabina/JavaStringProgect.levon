@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +39,13 @@ public class ScooterController {
         return new ResponseEntity<>(scooters, HttpStatus.OK);
     }
 
+    @GetMapping(value = "availabilityList")
+    public ResponseEntity<List<AccountScooter>> getAvailabilityScooters() {
+        List<AccountScooter> scooters = accountScooterService.getAll();
+        log.info("Get query : /api/v1/scooter/availabilityList");
+        return new ResponseEntity<>(scooters, HttpStatus.OK);
+    }
+
     @GetMapping(value = "get")
     public ResponseEntity<Scooter> getScooter(@RequestParam Map<String, String> mapParam) {
         Long scooterId = Long.parseLong(mapParam.get("id"));
@@ -49,6 +53,7 @@ public class ScooterController {
         if(scooter == null) {
             throw new ScooterException("Scooter with id " + scooterId + " not found!");
         }
+        log.info("Get query : /api/v1/scooter/get");
         return new ResponseEntity<>(scooter, HttpStatus.OK);
     }
 
@@ -58,6 +63,15 @@ public class ScooterController {
         Scooter scooter = scooterService.getById(rentScooterDTO.getBody().getScooterId());
         AccountScooter accountScooter = new AccountScooter(scooter, account);
         accountScooterService.save(accountScooter);
+        log.info("Post query : /api/v1/scooter/rent");
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "rent")
+    public ResponseEntity deleteRentScooter(RequestEntity<RentScooterDTO> rentScooterDTO) {
+        Scooter scooter = scooterService.getById(rentScooterDTO.getBody().getScooterId());
+        accountScooterService.deleteByScooter(scooter);
+        log.info("Delete query : /api/v1/scooter/rent");
         return new ResponseEntity(HttpStatus.OK);
     }
 }
