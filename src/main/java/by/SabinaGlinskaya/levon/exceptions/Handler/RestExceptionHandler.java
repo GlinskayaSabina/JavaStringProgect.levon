@@ -2,6 +2,7 @@ package by.SabinaGlinskaya.levon.exceptions.Handler;
 
 import by.SabinaGlinskaya.levon.exceptions.AccountAuthException;
 import by.SabinaGlinskaya.levon.exceptions.AccountValidationException;
+import by.SabinaGlinskaya.levon.exceptions.ScooterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("timestamp", LocalDate.now());
         body.put("errors", "Wrong credentials!");
         log.info("Wrong credentials!");
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ScooterException.class)
+    public final ResponseEntity<Object> handleScooterException(ScooterException ex, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDate.now());
+        body.put("error", ex.getMessage());
+        log.info(ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }
