@@ -2,6 +2,7 @@ const token = window.localStorage.getItem("token");
 const accountId = window.localStorage.getItem("accountId");
 const scooterId = window.localStorage.getItem("scooterId");
 const scooterContent = document.getElementById("scooters-content");
+let myRent;
 
 if (token) {
     if(scooterId) scooterInfo(scooterId);
@@ -16,6 +17,7 @@ if (token) {
                 const data = await response.json();
                 if(data && data.scooter) {
                     window.localStorage.setItem("scooterId", data.scooter.id);
+                    myRent = data;
                     scooterInfo(data.scooter.id);
                 } else {
                     scooterList();
@@ -98,11 +100,54 @@ async function scooterInfo(id) {
     })());
 
     container.appendChild((() => {
+        const p = document.createElement('p');
+        p.innerHTML = `Scooter Model: ${scooter.model}`;
+
+        return p;
+    })());
+
+    container.appendChild((() => {
+        const p = document.createElement('p');
+        p.innerHTML = `Price per minute: ${scooter.price}`;
+
+        return p;
+    })());
+
+    const availabilityResponse = await fetch(`/api/v1/account/rent?accountId=${accountId}`, {
+        headers: {
+            'Accept-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (availabilityResponse.ok) {
+        const data = await availabilityResponse.json();
+        if(data && data.rentTime) {
+            container.appendChild((() => {
+                const p = document.createElement('p');
+                p.innerHTML = `Rent Date: ${new Date(data.rentTime).toLocaleDateString()}`;
+
+                return p;
+            })());
+
+            container.appendChild((() => {
+                const p = document.createElement('p');
+                p.innerHTML = `Rent Time: ${new Date(data.rentTime).toLocaleTimeString()}`;
+
+                return p;
+            })());
+        } else {
+            scooterList();
+        }
+    } else scooterList();
+
+    container.appendChild((() => {
         const button = document.createElement('button');
         button.innerHTML = "Stop";
-        button.onclick = () => {
+        button.className = "btn btn-success";
+        button.onclick = async () => {
             window.localStorage.removeItem("scooterId");
-            fetch("/api/v1/scooter/rent", {
+            await fetch("/api/v1/scooter/rent", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -124,24 +169,34 @@ async function scooterInfo(id) {
 
 function scooterComponent(scooter, availabilityData) {
     const container = document.createElement('div');
+    container.className = "scooter-card";
     container.appendChild((() => {
+        const image = document.createElement('img');
+        image.src = "https://gyro-cult.ru/upload/iblock/df1/df1687f385ceda36fd3d3caee82cb489.png";
+        image.width = 250;
+
+        return image;
+    })())
+    const div = document.createElement("div");
+    div.appendChild((() => {
         const header = document.createElement('h1');
         header.innerHTML = scooter.model;
 
         return header;
     })());
-    container.appendChild((() => {
+    div.appendChild((() => {
         const price = document.createElement('p');
-        price.innerHTML = scooter.price.toFixed(2);
+        price.innerHTML = `Price per minute: ${scooter.price.toFixed(2)}$`;
 
         return price;
     })());
-    container.appendChild((() => {
+    div.appendChild((() => {
         const button = document.createElement('button');
         button.innerHTML = 'Take this!';
-        button.onclick = () => {
+        button.className = "btn btn-primary";
+        button.onclick = async () => {
             window.localStorage.setItem("scooterId", scooter.id);
-            fetch("/api/v1/scooter/rent", {
+            await fetch("/api/v1/scooter/rent", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -162,5 +217,6 @@ function scooterComponent(scooter, availabilityData) {
         return button;
     })());
 
+    container.appendChild(div);
     return container;
 }

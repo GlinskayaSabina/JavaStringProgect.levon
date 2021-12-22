@@ -7,6 +7,7 @@ import by.SabinaGlinskaya.levon.model.AccountScooter;
 import by.SabinaGlinskaya.levon.model.Scooter;
 import by.SabinaGlinskaya.levon.services.AccountScooterService;
 import by.SabinaGlinskaya.levon.services.AccountService;
+import by.SabinaGlinskaya.levon.services.MailService;
 import by.SabinaGlinskaya.levon.services.ScooterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,9 @@ public class ScooterController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    MailService mailService;
 
     @GetMapping(value = "list")
     public ResponseEntity<List<Scooter>> getScooters() {
@@ -68,8 +73,11 @@ public class ScooterController {
     }
 
     @DeleteMapping(value = "rent")
-    public ResponseEntity deleteRentScooter(RequestEntity<RentScooterDTO> rentScooterDTO) {
+    public ResponseEntity deleteRentScooter(RequestEntity<RentScooterDTO> rentScooterDTO) throws MessagingException {
         Scooter scooter = scooterService.getById(rentScooterDTO.getBody().getScooterId());
+        Account account = accountService.findById(rentScooterDTO.getBody().getAccountId());
+        AccountScooter accountScooter = accountScooterService.getByAccount(account);
+        mailService.sendMailAboutRent(accountScooter);
         accountScooterService.deleteByScooter(scooter);
         log.info("Delete query : /api/v1/scooter/rent");
         return new ResponseEntity(HttpStatus.OK);

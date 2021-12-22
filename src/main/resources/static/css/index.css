@@ -1,9 +1,20 @@
 header {
     padding: 15px;
-    background: black;
+    background: rgba(0,0,0,0.6);
     color: white;
     display: flex;
     justify-content: space-between;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div.form-group label {
+    color: white;
 }
 
 /* header links */
@@ -20,6 +31,10 @@ footer {
     color: white;
     display: flex;
     justify-content: end;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .container {
@@ -41,4 +56,45 @@ button.link {
 
 button.link:hover {
     color: #0a58ca;
+}
+
+.bgImage {
+    z-index: -1;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    filter: brightness(0.5);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#scooters-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    padding-bottom: 100px;
+}
+
+.scooter-card {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 30px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 30px;
+}
+
+.scooter-card > div {
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    align-items: center;
+    justify-content: center;
 }

@@ -18,4 +18,9 @@ public class Scooter extends BaseEntity {
 
     @Column(name = "price")
     private float price;
+
+    public Scooter(String model, float price) {
+        this.model = model;
+        this.price = price;
+    }
 }
