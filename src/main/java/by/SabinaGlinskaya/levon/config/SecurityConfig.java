@@ -19,6 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtTokenFilter jwtTokenFilter;
 
     private static final String SCOOTER_ENDPOINT = "/api/v1/scooter/*";
+    private static final String ADMIN_ENDPOINT = "/api/v1/admin/*";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -30,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(SCOOTER_ENDPOINT).hasAnyRole("BUYER", "ADMIN")
+                .antMatchers(ADMIN_ENDPOINT).hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

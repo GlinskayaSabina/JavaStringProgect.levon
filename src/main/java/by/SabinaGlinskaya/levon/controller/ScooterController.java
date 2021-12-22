@@ -1,5 +1,6 @@
 package by.SabinaGlinskaya.levon.controller;
 
+import by.SabinaGlinskaya.levon.AOP.LogAnnotation;
 import by.SabinaGlinskaya.levon.dto.RentScooterDTO;
 import by.SabinaGlinskaya.levon.exceptions.ScooterException;
 import by.SabinaGlinskaya.levon.model.Account;
@@ -37,6 +38,7 @@ public class ScooterController {
     @Autowired
     MailService mailService;
 
+    @LogAnnotation
     @GetMapping(value = "list")
     public ResponseEntity<List<Scooter>> getScooters() {
         List<Scooter> scooters = scooterService.getAll();
