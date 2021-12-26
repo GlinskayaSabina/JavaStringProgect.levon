@@ -4,5 +4,5 @@ public class Constants {
 
     public static final String MY_EMAIL = "sabinagli45@gmail.com";
 
-    public static final String MY_PASSWORD = "10102001Ssa";
+    public static final String MY_PASSWORD = "";
 }
